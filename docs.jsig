@@ -1,0 +1,28 @@
+import { HttpRequest, HttpResponse } from "node.http"
+
+type RoutePattern : String
+type RouteHandler : (
+    req: HttpRequest,
+    res: HttpResponse,
+    opts: Object & {
+        params: Object<String, String>,
+        splat: String | null
+    },
+    cb: Callback<Error, void>
+) => void
+
+type NotFoundError : Error & {
+    type: "http-hash-router.not-found",
+    statusCode: 404
+}
+
+type Router : {
+    set: (RoutePattern, RouteHandler) => void
+} & (
+    req: HttpReqest,
+    res: HttpResponse,
+    opts: Object,
+    cb: Callback<NotFoundError | Error, void>
+) => void
+
+http-hash-router : () => Router
