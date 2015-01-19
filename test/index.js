@@ -117,6 +117,55 @@ test('supports splats', function t(assert) {
     });
 });
 
+test('supports methods', function t(assert) {
+    var router = HttpHashRouter();
+    var server = http.createServer(defaultHandler(router));
+    server.listen(0);
+
+    router.set('/foo', {
+        GET: function onFoo(req, res) {
+            res.end('get');
+        },
+        POST: function onPost(req, res) {
+            res.end('post');
+        }
+    });
+
+    makeRequest(server, {
+        url: '/foo',
+        method: 'GET'
+    }, function onResp(err, resp) {
+        assert.ifError(err);
+
+        assert.equal(resp.statusCode, 200);
+        assert.equal(resp.body, 'get');
+
+        makeRequest(server, {
+            url: '/foo',
+            method: 'POST'
+        }, function onResp(err, resp) {
+            assert.ifError(err);
+
+            assert.equal(resp.statusCode, 200);
+            assert.equal(resp.body, 'post');
+
+            makeRequest(server, {
+                url: '/foo',
+                method: 'PUT'
+            }, function onResp(err, resp) {
+                assert.ifError(err);
+
+                assert.equal(resp.statusCode, 405);
+                assert.equal(resp.body,
+                    '405 Method Not Allowed /foo');
+
+                server.close();
+                assert.end();
+            });
+        });
+    });
+});
+
 function defaultHandler(hashRouter) {
     return function handler(req, res) {
         hashRouter(req, res, {}, function onError(err) {

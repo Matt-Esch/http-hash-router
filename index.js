@@ -4,6 +4,7 @@ var HttpHash = require('http-hash');
 var url = require('url');
 var TypedError = require('error/typed');
 var extend = require('xtend');
+var httpMethods = require('http-methods/method');
 
 var ExpectedCallbackError = TypedError({
     type: 'http-hash-router.expected.callback',
@@ -24,9 +25,18 @@ module.exports = HttpHashRouter;
 function HttpHashRouter() {
     var hash = HttpHash();
 
-    handleRequest.set = hash.set.bind(hash);
+    handleRequest.hash = hash;
+    handleRequest.set = set;
 
     return handleRequest;
+
+    function set(name, handler) {
+        if (handler && typeof handler === 'object') {
+            handler = httpMethods(handler);
+        }
+
+        return hash.set(name, handler);
+    }
 
     function handleRequest(req, res, opts, cb) {
         if (typeof cb !== 'function') {

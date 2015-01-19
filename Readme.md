@@ -39,7 +39,7 @@ type NotFoundError : Error & {
 }
 
 type Router : {
-    set: (pattern: String, handler: Function) => void
+    set: (pattern: String, handler: Function | Object) => void
 } & (
     req: HttpReqest,
     res: HttpResponse,
@@ -91,7 +91,7 @@ it will throw the `http-hash-router.expected-callback` exception.
 
 ```ocaml
 type RoutePattern : String
-type RouteHandler : (
+type RouteHandler : Object<method: String, RouteHandler> | (
     req: HttpRequest,
     res: HttpResponse,
     opts: Object & {
@@ -106,6 +106,11 @@ set : (RoutePattern, RouteHandler) => void
 
 You can call `.set()` on the router and it will internally
 store your handler against the pattern.
+
+`.set()` takes a route pattern and a route handler. A route
+    handler is either a function or an object. If you use
+    an object then we will create a route handler function
+    using the [`http-methods`][http-methods] module.
 
 The `.set()` functionality is implemented by
 [`http-hash`][http-hash] itself and you can find documentation
@@ -127,3 +132,4 @@ the values of the params and splat will be passed to the
 
   [http-hash]: https://github.com/Matt-Esch/http-hash
   [http-hash-set]: https://github.com/Matt-Esch/http-hash#hashsetpath-handler
+  [http-methods]: https://github.com/Raynos/http-methods
