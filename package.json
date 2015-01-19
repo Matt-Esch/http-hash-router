@@ -11,6 +11,7 @@
   "dependencies": {
     "error": "^5.0.0",
     "http-hash": "^1.0.2",
+    "http-methods": "^1.0.0",
     "xtend": "^4.0.0"
   },
   "devDependencies": {

@@ -1,7 +1,7 @@
 import { HttpRequest, HttpResponse } from "node.http"
 
 type RoutePattern : String
-type RouteHandler : (
+type RouteHandler : Object<method: String, RouteHandler> | (
     req: HttpRequest,
     res: HttpResponse,
     opts: Object & {
