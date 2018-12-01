@@ -157,7 +157,7 @@ test('supports methods', function t(assert) {
 
                 assert.equal(resp.statusCode, 405);
                 assert.equal(resp.body,
-                    '405 Method Not Allowed /foo');
+                    '405 Method Not Allowed');
 
                 server.close();
                 assert.end();
