@@ -20,6 +20,7 @@
     "tape": "^3.0.3",
     "test-server-request": "^2.0.1"
   },
+  "license": "MIT",
   "scripts": {
     "test": "istanbul cover --print detail --report html test/index.js",
     "view-cover": "opn coverage/index.html"
